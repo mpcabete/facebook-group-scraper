@@ -16,3 +16,18 @@ Since the work isn't scoped perfectly, or that I might need changes after using 
 jobs@buntysomroy.com 
 
 https://www.facebook.com/BsomRoy/?show_switched_toast=0
+
+
+-----
+
+Group page ->
+- member list and urls
+
+member page ->
+- name
+- email
+- works on
+
+business ->
+- email
+- website

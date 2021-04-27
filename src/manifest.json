@@ -31,7 +31,7 @@
     
     
     
-    "permissions": [ "debugger","tabs" ],
+    "permissions": [ "debugger","tabs","storage" ],
     "host_permissions": [
       "<all_urls>"
     ],
