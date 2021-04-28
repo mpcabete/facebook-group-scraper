@@ -6,12 +6,13 @@ Ja feito:
 - network request filering
 - network response parsing
 - member information extraction
-- [] finish analysis on click
-- [] remove duplicates
+- [x] finish analysis on click
+- [x] remove duplicates
 - [] group class to store the data
-- [] debugger detach
-- [] add data to local storage
+- [x] debugger detach
+- [x] add data to local storage
 - [] clear data option
+- [] trubleshoot empty response bug
 
 ## user page scraping
 [] network request analysis
@@ -25,8 +26,9 @@ Ja feito:
 ## UI
 - [] sored data overview
 - [] analysis time option
-- [] group analysis start button
+- [x] group analysis start button
 - [] userlist analysis start button
+- [] download button
 
 ## google spreadsheet generation
 

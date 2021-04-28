@@ -1,9 +1,35 @@
 try {
     let allData = []
-    const analysisMaxTime = 0.1*60*1000
+    const analysisMaxTime = 10*60*1000
     let currentState = 'idle'
     let currentTimer
+    
+    // ================================================================ message handling
+    messageHandler=(msg,sender,response)=>{
+        if (msg.interaction==='gAnalysis'){
+            console.log('currentState',currentState)
+        if (currentState==='idle'){
+            startGroupAnalysis(analysisMaxTime)
+        }
+        else if (currentState==='groupAnalysis'){
+            clearTimeout(currentTimer)
+            stopGroupAnalysis()
+        }
+        }
+        response('gAnalysis')
+    }
+     
 
+
+    // sends message to content script
+    const sendMessage = (tabs,command,data={}) => {
+        chrome.tabs.sendMessage(tabs[0].id, {
+            command: command,
+            data:data
+        }, (res) => console.log(res))
+    }
+
+  
  
     // ================================================================ storage manipulation
     const removeDuplicates = (key,acessor)=>{
@@ -40,7 +66,7 @@ try {
             console.log('response error: ',chrome.runtime.lastError)
         }
         if(response===undefined){
-            // console.log('No response')
+            console.log('No response')
             return
         }
 
@@ -95,7 +121,7 @@ try {
 
             members.push(...memberPacket)
             chrome.storage.local.set({members:members},()=>console.log('members setted'))
-            console.log(members)
+            console.log(members.length)
                 }  
             )
             
@@ -104,29 +130,6 @@ try {
     
 
 
-    // ================================================================ messages
-    // sends message to content script
-    const sendMessage = (tabs,command,data={}) => {
-        chrome.tabs.sendMessage(tabs[0].id, {
-            command: command,
-            data:data
-        }, (res) => console.log(res))
-    }
-
-    
-    // action click handler
-    const click = (e) => {
-        console.log('currentState',currentState)
-        if (currentState==='idle'){
-            startGroupAnalysis(analysisMaxTime)
-        }
-        else if (currentState==='groupAnalysis'){
-            clearTimeout(currentTimer)
-            stopGroupAnalysis()
-        }
-        
-        
-    }
     // ========================================================================== csv
     // converts data into csv format
     generateCsv = (data)=>{
@@ -217,7 +220,10 @@ try {
     }
     
     // adds click event to icon
-    chrome.action.onClicked.addListener((e) => click(e))
+    // chrome.action.onClicked.addListener((e) => click(e))
+
+    //listen for click in popup buttons
+    chrome.runtime.onMessage.addListener(messageHandler)
     
     
 } catch {
