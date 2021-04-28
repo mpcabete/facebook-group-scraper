@@ -18,8 +18,16 @@ try {
         }
         response('gAnalysis')
         }
+
+
         if (msg.interaction==='download'){
-            response('PLACEHOLDER')
+            
+            console.log('download message')
+            chrome.storage.local.get('members',({members})=>{
+                const csv = generateCsv(members)
+                response(csv)
+            })
+            return true
         }
     }
      
@@ -141,7 +149,7 @@ try {
     generateCsv = (data)=>{
         const header = 'name,bio,url,type'
         let csv = [header]
-        data.forEach(d=>{
+        data.forEach((d,i)=>{
             const{name,bio_text, url, __isProfile:type} = d
             let bio = '--'
             if (bio_text?.text){
@@ -149,8 +157,14 @@ try {
             }
             // TODO:se for gerar csv memo tem q substituir as , antes ou ver se \, continua fudendo
     
-            const line = [name,bio,url,type].map(x=>x.replace(/,/g,' ')).join(',')
-            csv.push(line)
+            console.log(i)
+            try{
+
+                const line = [name,bio,url,type].map((x)=>{
+                    return '"' + x.replace(/"/g,'""')+'"'
+                }).join(',')
+                csv.push(line)
+            }catch(e){console.log(e)}
             
         })
         // console.log(csv.join('\n'))
@@ -235,3 +249,4 @@ try {
 } catch {
     e => console.error(e)
 }
+

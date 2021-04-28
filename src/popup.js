@@ -6,11 +6,10 @@ startGroupAnalysis = ()=>{
 
 download = ()=>{
     chrome.runtime.sendMessage({interaction:'download'}, (response)=>{
+        console.log(response)
         downloadFile('userData.csv',response);
       });
-// const csv = msg.data
-//         // TODO: nome dinamico
-//         download('users.csv',csv)
+
 }
 
 function downloadFile(filename, text) {

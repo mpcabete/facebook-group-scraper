@@ -2,32 +2,34 @@ console.log("contentScript")
 
 
 let interval = 0
-function download(filename, text) {
-    var element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-    element.setAttribute('download', filename);
+// function download(filename, text) {
+//     var element = document.createElement('a');
+//     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+//     element.setAttribute('download', filename);
     
-    element.style.display = 'none';
-    document.body.appendChild(element);
+//     element.style.display = 'none';
+//     document.body.appendChild(element);
     
-    element.click();
+//     element.click();
     
-    document.body.removeChild(element);
-  }
+//     document.body.removeChild(element);
+//   }
 
 const msgHandler = (msg)=>{
     if (msg.command==='start' && interval==0){
         console.log('msg recived, starting...')
-        interval = setInterval(()=>window.scrollTo(0,document.body.scrollHeight),500)
+        interval = setInterval(()=>window.scrollTo(0,document.body.scrollHeight),1000)
     }
 
     if(msg.command==='stop'){
         console.log('msg recived, stopping...')
         clearInterval(interval)
         interval = 0
-        const csv = msg.data
-        // TODO: nome dinamico
-        download('users.csv',csv)
+
+        
+        // const csv = msg.data
+        // // TODO: nome dinamico
+        // download('users.csv',csv)
     }
 }
 

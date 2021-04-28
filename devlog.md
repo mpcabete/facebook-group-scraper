@@ -28,8 +28,22 @@ Ja feito:
 - [] analysis time option
 - [x] group analysis start button
 - [] userlist analysis start button
-- [] download button
+- [x] download button
 
 ## google spreadsheet generation
 
 // botar input com seleçao do tempo e previsao de n de usuarios
+
+
+## analise
+empresas:
+"LIFE_EVENTS" no graphql
+
+https://www.facebook.com/kmschremser/about?section=year-overviews
+
+links:
+rout definition
+
+structure: 
+document.querySelectorAll('ul')[1].querySelectorAll('a')
+
