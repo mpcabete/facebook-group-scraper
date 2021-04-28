@@ -5,6 +5,7 @@ try {
     let currentTimer
     
     // ================================================================ message handling
+    // mudei esses parada pra cima antes de reparar no bug
     messageHandler=(msg,sender,response)=>{
         if (msg.interaction==='gAnalysis'){
             console.log('currentState',currentState)
@@ -15,8 +16,11 @@ try {
             clearTimeout(currentTimer)
             stopGroupAnalysis()
         }
-        }
         response('gAnalysis')
+        }
+        if (msg.interaction==='download'){
+            response('PLACEHOLDER')
+        }
     }
      
 
@@ -66,6 +70,8 @@ try {
             console.log('response error: ',chrome.runtime.lastError)
         }
         if(response===undefined){
+            // ele ta retornando sem resposta as vezes, mas no devtools aparece.
+            // as vezes eh justamente por tar com o devtools aberto, checar dps
             console.log('No response')
             return
         }
