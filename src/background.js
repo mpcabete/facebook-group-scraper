@@ -6,6 +6,7 @@ try {
 
 
     importScripts(
+        'background/memberClass.js',
         'background/csvParsing.js',
         'background/storage.js',
         'background/responseParsing.js',

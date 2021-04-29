@@ -36,12 +36,20 @@
 const extractMemberInfo=(data)=>{
     const isGroupData = data?.data?.node?.__typename === 'Group'
     if (isGroupData){
-        const usersData = data.data.node.new_members.edges.map(e=>e.node)
+        const membersInfo = data.data.node.new_members.edges.map(e=>e.node)
 
-        // add user data to storage
+        const membersData = membersInfo.map(m=>{
+            const{id,name,bio_text, url, __isProfile:type,is_verified} = m
+            let bio = '--'
+            if (bio_text?.text){
+                bio = bio_text.text
+            }
+            const groupId = m.group_membership?.associated_group.id
+            return new Member(id,name,bio,url,type,groupId,is_verified)
+        })
         
-        allData = allData.concat(usersData)
-        insertMember(usersData)
+        // add user data to storage
+        insertMember(membersData)
 
         // console.log('getUsers: ',console.log(data.data.node))
     }

@@ -15,16 +15,18 @@ Ja feito:
 - [] trubleshoot empty response bug
 
 ## user page scraping
-[] network request analysis
-[] userClass to store data
-- recursive analysis of page's text nodes
-- DOM mutation event listener
-- email matching regex
+[x] network request analysis
+[x] userClass to store data
+[] recursive analysis of page's text nodes
+[x] DOM mutation event listener
+[x] email matching regex
+[x] user company data extraction
+[x] add data to previous user data
 
 ## company page scraping
 
 ## UI
-- [] sored data overview
+- [] stored data overview
 - [] analysis time option
 - [x] group analysis start button
 - [] userlist analysis start button

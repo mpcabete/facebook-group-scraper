@@ -39,7 +39,7 @@ const getCompany = ()=>{
         }
     })
     console.log(data)
-    chrome.runtime.sendMessage({interaction:'memberData',data:data});
+    chrome.runtime.sendMessage({interaction:'memberData',data:data,ownUrl:document.URL});
     // console.log('Company',node[0].parentElement.querySelector('a').innerText)
 }
 
@@ -102,7 +102,8 @@ const execute = ()=>{
 
 // mutationHandler function to execute when mutations are observed
 const mutationHandler = function(mutationsList, observer) {
-
+    const baseURL = 'https://www.facebook.com/groups/'
+    if(document.URL.substr(0,baseURL.length)===baseURL) return
     // execute()
     getCompany()
 };

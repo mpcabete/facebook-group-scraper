@@ -16,19 +16,24 @@
 
 
     self.insertMember = (memberPacket)=>{
+        // get stored members
         chrome.storage.local.get('members',(result)=>{
             if (chrome.runtime.lastError) {
                 console.log('storage error: ',chrome.runtime.lastError)
             }
+            // initializes for first run
             let members
             if (result?.members===undefined) {
                 console.log('initializing members array')
                 members = []
             }else{members = result.members}
 
+            // adds members
             members.push(...memberPacket)
-            chrome.storage.local.set({members:members},()=>console.log('members setted'))
-            console.log(members.length)
+
+            // saves to storage
+            chrome.storage.local.set({members:members},()=>{})
+            console.log('Total: ',members.length)
                 }  
             )
             

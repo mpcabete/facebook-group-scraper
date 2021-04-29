@@ -33,7 +33,9 @@
         }
         else if (msg.interaction==='memberData'){
             const data = msg.data
-            console.log('tab',sender.tab.id)
+            const url = msg.ownUrl
+            console.log('msg data: ',msg)
+            onMemberData(url,data)
             
         }
     }

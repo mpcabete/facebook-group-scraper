@@ -23,7 +23,7 @@
     },
     "content_scripts": [
         {
-          "matches": ["<all_urls>"],
+          "matches": ["*://*.facebook.com/*"],
           "js": ["contentScript.js"]
         }
       ],
