@@ -2,18 +2,8 @@ console.log("contentScript")
 
 
 let interval = 0
-// function download(filename, text) {
-//     var element = document.createElement('a');
-//     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-//     element.setAttribute('download', filename);
-    
-//     element.style.display = 'none';
-//     document.body.appendChild(element);
-    
-//     element.click();
-    
-//     document.body.removeChild(element);
-//   }
+let isDataSent = false
+
 
 const msgHandler = (msg)=>{
     if (msg.command==='start' && interval==0){
@@ -33,46 +23,96 @@ const msgHandler = (msg)=>{
     }
 }
 
-// ====================================== email scraping
-const getEmails = (element)=>{
-    if(element.hasChildNodes()){
-        element.childNodes.forEach(getEmails)
-    }else if(element.nodeType === Text.TEXT_NODE){
-        const emails= element.textContent.match(/\b[a-zA-Z0-9.-]+@[a-zA-Z0-9.-]+.[a-zA-Z0-9.-]+\b/g)
-        // const domains= element.textContent.match(/(https?:\/\/)?([\w\-]){1,10}\.{1}([a-zA-Z]{2,10})([\/\w-]{0,10}){0,10}\/?\??([^#\n\r]{0,10})?#?([^\n\r]{0,10})/g)
-        
-        if(emails){
-            console.log('emails:',emails)
-            // console.log('domains:',domains)
+// ====================================== company data
+const getCompany = ()=>{
+    const aboutList = document.querySelectorAll('ul')[1]
+    const isLoaded = aboutList.hasChildNodes()
+    if (!isLoaded)return
+    const nodes = searchNode(aboutList,/\s(?:na|at)\s/g) 
+    const elements = nodes.map(n=>n.parentElement)
+    const data = elements.map((e)=>{
+        const a = e.querySelector('a')
+        return{
+            text:e.innerText,
+            company:a?.innerText ?? 'no <a>',
+            url:a?.href ?? 'none'
         }
-        // console.log(element.textContent)
-        // element.textContent = element.textContent.replace(/membros/gi,'piroka')
-    }
+    })
+    console.log(data)
+    chrome.runtime.sendMessage({interaction:'memberData',data:data});
+    // console.log('Company',node[0].parentElement.querySelector('a').innerText)
 }
 
+// ====================================== search
+const searchText = (node,regex,result)=>{
+    if(!result) {
+
+        result=[]
+    }
+    if(!node.hasChildNodes()&&!node.nodeType === Text.TEXT_NODE){
+        return
+    }else
+    if(node.nodeType === Text.TEXT_NODE){
+        const match = node.textContent.match(regex)
+        
+        if(match){
+            result.push(match)
+            
+        }
+    }else if(node.hasChildNodes()){
+        node.childNodes.forEach(e=>searchText(e,regex,result))
+
+    }
+
+    return result
+}
+const searchNode = (node,regex,result)=>{
+    if(!result) {
+
+        result=[]
+    }
+    if(!node.hasChildNodes()&&!node.nodeType === Text.TEXT_NODE){
+        return
+    }else
+    if(node.nodeType === Text.TEXT_NODE){
+        const match = node.textContent.match(regex)
+        
+        if(match){
+            result.push(node)
+            
+        }
+    }else if(node.hasChildNodes()){
+        node.childNodes.forEach(e=>searchNode(e,regex,result))
+
+    }
+
+    return result
+}
+// ====================================== email scraping
 const execute = ()=>{
     const start = new Date().getTime()
     // console.log('executing')
-    getEmails(document.body)
+    searchText(document.body,/\b[a-zA-Z0-9.-]+@[a-zA-Z0-9.-]+.[a-zA-Z0-9.-]+\b/g)
     const time = new Date().getTime() - start
     // console.log('done! ',time,'ms')
 }
 
 
 
-// Options for the observer (which mutations to observe)
-const config = {characterData:true, childList: true, subtree: true };
 
-// Callback function to execute when mutations are observed
-const callback = function(mutationsList, observer) {
-    console.log('mutation')
-    execute()
+// mutationHandler function to execute when mutations are observed
+const mutationHandler = function(mutationsList, observer) {
+
+    // execute()
+    getCompany()
 };
 
 
+// Options for the observer (which mutations to observe)
+const config = {characterData:true, childList: true, subtree: true };
 // ==== nerfed email scraping:
-// const observer = new MutationObserver(callback);
-// observer.observe(document.body, config);
+const observer = new MutationObserver(mutationHandler);
+observer.observe(document.body, config);
 // ======================================
 
 // setTimeout(execute,3000)
@@ -80,3 +120,27 @@ const callback = function(mutationsList, observer) {
 
 
 chrome.runtime.onMessage.addListener((msg,sender,response)=>{msgHandler(msg);response('sucess')})
+
+
+
+// query(range, found) {
+//     if (!found) {
+//       found = [];
+//     }
+//     if (!this.boundary.intersects(range)) { //n eh text e n tem child
+//       return;
+//     } else {
+//       for (let p of this.points) {  //adiciona os match ao found
+//         if (range.contains(p)) {
+//           found.push(p);
+//         }
+//       }
+//       if (this.divided) { //se tem child
+//         this.northwest.query(range, found);
+//         this.northeast.query(range, found);
+//         this.southwest.query(range, found);
+//         this.southeast.query(range, found);
+//       }
+//     }
+//     return found; 
+//   }

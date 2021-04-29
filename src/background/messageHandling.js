@@ -1,6 +1,7 @@
     // ================================================================ message handling
     // mudei esses parada pra cima antes de reparar no bug
     messageHandler=(msg,sender,response)=>{
+        console.log(msg)
         if (msg.interaction==='gAnalysis'){
             console.log('currentState',currentState)
         if (currentState==='idle'){
@@ -10,11 +11,18 @@
             clearTimeout(currentTimer)
             stopGroupAnalysis()
         }
+        // todo: change to return if started or stopped
         response('gAnalysis')
         }
 
+        else if (msg.interaction==='mAnalysis'){
+            startMembersAnalysis()
+            // todo: change to return if started or stopped
+            response('mAnalysis')
+        }
 
-        if (msg.interaction==='download'){
+
+        else if (msg.interaction==='download'){
             
             console.log('download message')
             chrome.storage.local.get('members',({members})=>{
@@ -22,6 +30,11 @@
                 response(csv)
             })
             return true
+        }
+        else if (msg.interaction==='memberData'){
+            const data = msg.data
+            console.log('tab',sender.tab.id)
+            
         }
     }
      

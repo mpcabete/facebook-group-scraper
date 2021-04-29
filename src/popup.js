@@ -3,6 +3,11 @@ startGroupAnalysis = ()=>{
         console.log(response);
       });
 } 
+startMembersAnalysis = ()=>{
+    chrome.runtime.sendMessage({interaction:'mAnalysis'}, function(response) {
+        console.log(response);
+      });
+} 
 
 download = ()=>{
     chrome.runtime.sendMessage({interaction:'download'}, (response)=>{
@@ -26,6 +31,7 @@ function downloadFile(filename, text) {
   }
 
 document.getElementById('startGbtn').addEventListener('click',startGroupAnalysis)
+document.getElementById('startMbtn').addEventListener('click',startMembersAnalysis)
 document.getElementById('downloadBtn').addEventListener('click',download)
 
 

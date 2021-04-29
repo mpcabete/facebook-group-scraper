@@ -9,6 +9,7 @@ try {
         'background/csvParsing.js',
         'background/storage.js',
         'background/responseParsing.js',
+        'background/memberNavigation.js',
         'background/messageHandling.js',
         'background/debugger.js'
         )
