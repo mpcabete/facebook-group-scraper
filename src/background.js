@@ -20,7 +20,7 @@ try {
     chrome.runtime.onMessage.addListener(messageHandler)
     
     
-} catch {
-    e => console.error(e)
+} catch(e) {
+    console.error('eee',e)
 }
 

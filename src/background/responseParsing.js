@@ -6,7 +6,7 @@
     if(response===undefined){
         // ele ta retornando sem resposta as vezes, mas no devtools aparece.
         // as vezes eh justamente por tar com o devtools aberto, checar dps
-        console.log('No response')
+        console.log('%cNo response','color:red')
         return
     }
 

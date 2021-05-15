@@ -4,9 +4,23 @@
     <link rel="stylesheet" href="popupstyle.css">
   </head>
   <body>
-    <button id="startGbtn">Start Group Analysis</button>
-    <button id="startMbtn">Start Members Analysis</button>
-    <button id="downloadBtn">Download Data</button>
-    <script src="popup.js"></script>
+    <div class="container">
+      <div class="buttons">
+        <button id="startGbtn">Group Analysis</button>
+        <button id="startMbtn">Members Analysis</button>
+        <button id="downloadBtn">Download Data</button>
+        <button id="stop">Stop</button>
+        <button id="clear">Clear Data</button>
+        <script src="popup.js"></script>
+      </div>
+      <div class="data">
+        <div>
+          <span>Members Scraped: </span><span id="mCount">0</span>
+        </div>
+        <div>
+          <span>Members Analyzed: </span><span id="amCount">0</span>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

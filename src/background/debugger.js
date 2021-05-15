@@ -21,17 +21,24 @@ self.startGroupAnalysis = (analysisMaxTime)=>{
 
  // handles debugger events
  self.allEventHandler = ({ tabId }, message, params) => {
+    // if(message === "Network.loadingFinished"){
+    //   console.log(params.requestId)
+    // }
     if (params.response===undefined)return
     const {requestId , response:{mimeType:type} } = params
 
     
     // se for evento de network e eh texto
-    if (message == "Network.responseReceived" && type == 'text/javascript') {
+    if (message == "Network.responseReceived" && type == 'text/javascript' && params.response.url==="https://www.facebook.com/api/graphql/") {
 
         // pega a resposta
-        chrome.debugger.sendCommand({tabId: tabId}, "Network.getResponseBody", { "requestId": requestId }, parseBody)
-    }
-}
+        getResponseBody = ()=>{
+          chrome.debugger.sendCommand({tabId: tabId}, "Network.getResponseBody", { "requestId": requestId }, parseBody)
+              }
+      //The ideal would be to wait the event loading finished for this ID be fired, but 100ms did the trick
+              setTimeout(getResponseBody,100)
+          }
+      }
 
 self.stopGroupAnalysis = ()=>{
     console.log('stoping analysis!',currentTimer)
@@ -41,13 +48,9 @@ self.stopGroupAnalysis = ()=>{
             currentWindow: true
         }, (tabs)=>{
             removeDuplicates('members',(d)=>d.id)
-            console.log('dttid',tabs[0].id)
             chrome.debugger.detach({tabId:tabs[0].id},()=>{});
             
-            const csv = generateCsv(allData)
-            // TODO: tirar debugger
-            // chrome.debugger.detach(tabs[0].id);
-            sendMessage(tabs,'stop',csv)
+            sendMessage(tabs,'stop')
         }
     )
     currentState = 'idle'
@@ -59,7 +62,6 @@ self.startDebugger = (tabs) => {
     
     var version = "1.0"; //??
     const currentTabID = tabs[0].id
-    console.log('attid',currentTabID)
     
     chrome.debugger.attach({ //debug at current tab
         tabId: currentTabID

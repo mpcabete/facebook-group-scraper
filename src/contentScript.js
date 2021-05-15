@@ -25,21 +25,25 @@ const msgHandler = (msg)=>{
 
 // ====================================== company data
 const getCompany = ()=>{
-    const aboutList = document.querySelectorAll('ul')[1]
-    const isLoaded = aboutList.hasChildNodes()
-    if (!isLoaded)return
-    const nodes = searchNode(aboutList,/\s(?:na|at)\s/g) 
-    const elements = nodes.map(n=>n.parentElement)
-    const data = elements.map((e)=>{
-        const a = e.querySelector('a')
-        return{
-            text:e.innerText,
-            company:a?.innerText ?? 'no <a>',
-            url:a?.href ?? 'none'
-        }
-    })
-    console.log(data)
+    
+
+        const aboutList = document.querySelectorAll('ul')[1]
+        const isLoaded = aboutList?.hasChildNodes()
+        if (!isLoaded)return
+        const nodes = searchNode(aboutList,/\s(?:na|at)\s/g) 
+        const elements = nodes.map(n=>n.parentElement)
+        const data = elements.map((e)=>{
+            const a = e.querySelector('a')
+            return{
+                text:e.innerText,
+                company:a?.innerText ?? 'no <a>',
+                url:a?.href ?? 'none'
+            }
+        })
+
     chrome.runtime.sendMessage({interaction:'memberData',data:data,ownUrl:document.URL});
+    console.log('message sent')
+    isDataSent=true
     // console.log('Company',node[0].parentElement.querySelector('a').innerText)
 }
 
@@ -90,6 +94,7 @@ const searchNode = (node,regex,result)=>{
 }
 // ====================================== email scraping
 const execute = ()=>{
+    
     const start = new Date().getTime()
     // console.log('executing')
     searchText(document.body,/\b[a-zA-Z0-9.-]+@[a-zA-Z0-9.-]+.[a-zA-Z0-9.-]+\b/g)
@@ -102,10 +107,16 @@ const execute = ()=>{
 
 // mutationHandler function to execute when mutations are observed
 const mutationHandler = function(mutationsList, observer) {
-    const baseURL = 'https://www.facebook.com/groups/'
+    if(isDataSent){
+        console.log('data already sent... returning')
+        return
+    }
+    const baseURL = 'https://www.facebook.com/groups/' // sepa muda pra se for igual a membro
     if(document.URL.substr(0,baseURL.length)===baseURL) return
     // execute()
-    getCompany()
+    try{
+        getCompany()
+    }catch(e){console.error(e)}
 };
 
 
@@ -118,8 +129,19 @@ observer.observe(document.body, config);
 
 // setTimeout(execute,3000)
 // document.body.addEventListener('change',execute)
-
-
+// if no data is found send it after 3s
+timeout = ()=>{
+  const data ={
+                text:'--',
+                company:'no <a>',
+               url:'none'
+  }
+    if(!isDataSent){
+    console.log('no Data found, moving on...')
+    chrome.runtime.sendMessage({interaction:'memberData',data,ownUrl:document.URL});
+  }
+}
+setTimeout(timeout,3000)
 chrome.runtime.onMessage.addListener((msg,sender,response)=>{msgHandler(msg);response('sucess')})
 
 

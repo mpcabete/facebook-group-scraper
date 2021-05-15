@@ -11,7 +11,7 @@ Ja feito:
 - [] group class to store the data
 - [x] debugger detach
 - [x] add data to local storage
-- [] clear data option
+- [x] clear data option
 - [] trubleshoot empty response bug
 
 ## user page scraping
@@ -26,10 +26,22 @@ Ja feito:
 ## company page scraping
 
 ## UI
-- [] stored data overview
+- components:
+  - Start buttons
+    - members
+    - group
+    - companies
+    - stop
+  - data overview
+    - n members
+    - n analized members (%)
+    - n companies
+    - n analized companies 
+
+- [x] stored data overview
 - [] analysis time option
 - [x] group analysis start button
-- [] userlist analysis start button
+- [x] userlist analysis start button
 - [x] download button
 
 ## google spreadsheet generation
