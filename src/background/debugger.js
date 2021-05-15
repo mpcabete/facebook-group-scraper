@@ -11,9 +11,9 @@ self.startGroupAnalysis = (analysisMaxTime)=>{
         sendMessage(tabs,'start')
         // log dos dados
         // TODO: se quiser ter mais de 1 rodando tem q mudar o escopo do current timer
-        currentTimer = setTimeout(()=>{
-            stopGroupAnalysis()
-        },analysisMaxTime)
+        // currentTimer = setTimeout(()=>{
+            // stopGroupAnalysis()
+        // },analysisMaxTime)
     })
 
 
