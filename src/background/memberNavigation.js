@@ -30,37 +30,50 @@ self.onMemberData = (ownUrl,data, tabId) => {
 		return
     }
     // get members data
-    chrome.storage.local.get('members', (response) => {
-        const members = response.members
-        let next
-        let isAdded = false
+    chrome.storage.local.get(['members','companies'], (response) => {
+        const members = response.members;
+        const companies = response.companies ?? [];
+        let next;
+        let isAdded = false;
 
         // find item and get next
-        for (m in members){
-            // console.log('urls:',members[m].url,'  :  ',ownUrl)
-            if (members[m].url===ownUrl){
-                //console.log('member found at: ',m)
-                members[m].isChecked=true
-                members[m].company = data
-                isAdded = true
-                // console.log('new obj: ',members[m])
-            }else if(!members[m].isChecked){
-                next = members[m].url
-                if(isAdded)break
-            }
+        for (m in members) {
+          // console.log('urls:',members[m].url,'  :  ',ownUrl)
+          if (members[m].url === ownUrl) {
+            //console.log('member found at: ',m)
+            members[m].isChecked = true;
+            members[m].company = data;
+            isAdded = true;
+            // console.log('new obj: ',members[m])
+          } else if (!members[m].isChecked) {
+            next = members[m].url;
+            if (isAdded) break;
+          }
         }
+        // insert company data
+        console.log('data',data)
+        data.forEach(c=>{
+          if(c.company !== 'no <a>'){
+            companies.push(new Company(c.company,c.url,ownUrl))
+
+          }
+        })
         // update storage data
-        chrome.storage.local.set({members:members},()=>console.log('updated'))
-        setTimeout(()=>{
-            console.log('changing url...')
-            if(!next){
-                console.log('done')
-                return
-            }
-            chrome.tabs.update(tabId, {
-                url: next})
-            console.log("url updated")
-            },500)
+        chrome.storage.local.set({ companies: companies }, () =>{})
+        chrome.storage.local.set({ members: members }, () =>
+          console.log("updated")
+        );
+        setTimeout(() => {
+          console.log("changing url...");
+          if (!next) {
+            console.log("done");
+            return;
+          }
+          chrome.tabs.update(tabId, {
+            url: next,
+          });
+          console.log("url updated");
+        }, 500);
     })
 
     

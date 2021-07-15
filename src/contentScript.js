@@ -6,6 +6,7 @@ let isDataSent = false
 
 
 const msgHandler = (msg)=>{
+    // for group page analysis
     if (msg.command==='start' && interval==0){
         console.log('msg recived, starting...')
         interval = setInterval(()=>window.scrollTo(0,document.body.scrollHeight),1000)
@@ -15,8 +16,6 @@ const msgHandler = (msg)=>{
         console.log('msg recived, stopping...')
         clearInterval(interval)
         interval = 0
-
-        
         // const csv = msg.data
         // // TODO: nome dinamico
         // download('users.csv',csv)
@@ -25,7 +24,6 @@ const msgHandler = (msg)=>{
 
 // ====================================== company data
 const getCompany = ()=>{
-    
 
         const aboutList = document.querySelectorAll('ul')[1]
         const isLoaded = aboutList?.hasChildNodes()
@@ -93,13 +91,12 @@ const searchNode = (node,regex,result)=>{
     return result
 }
 // ====================================== email scraping
-const execute = ()=>{
-    
-    const start = new Date().getTime()
-    // console.log('executing')
-    searchText(document.body,/\b[a-zA-Z0-9.-]+@[a-zA-Z0-9.-]+.[a-zA-Z0-9.-]+\b/g)
-    const time = new Date().getTime() - start
-    // console.log('done! ',time,'ms')
+function getCompanyData() {
+
+    // const email = searchText(document.body,/\b[a-zA-Z0-9.-]+@[a-zA-Z0-9.-]+.[a-zA-Z0-9.-]+\b/g)
+    const domains = document.body.innerText.match(/(www|http:|https:)+[^\s]+[\w]/g)
+    const emails = document.body.innerText.match(/\b[a-zA-Z0-9.-]+@[a-zA-Z0-9.-]+.[a-zA-Z0-9.-]+\b/g)
+    return { emails, domains }
 }
 
 
@@ -113,6 +110,16 @@ const mutationHandler = function(mutationsList, observer) {
     }
     const baseURL = 'https://www.facebook.com/groups/' // sepa muda pra se for igual a membro
     if(document.URL.substr(0,baseURL.length)===baseURL) return
+    if (document.URL.includes('/about')){
+        //talvez tenha q esperar o load
+        console.log('companyPage')
+
+        const data = getCompanyData()
+        chrome.runtime.sendMessage({interaction:'companyData',data ,ownUrl:document.URL});
+        console.log('c message sent')
+        isDataSent=true
+        return
+    }
     // execute()
     try{
         getCompany()
@@ -167,3 +174,5 @@ chrome.runtime.onMessage.addListener((msg,sender,response)=>{msgHandler(msg);res
 //     }
 //     return found; 
 //   }
+//
+//TODO: colocar os dados sa compania na mensagem e colocar as companias no download
