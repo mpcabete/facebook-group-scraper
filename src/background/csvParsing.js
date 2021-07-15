@@ -99,7 +99,7 @@ async function generateDataEntries(){
               return{
                   employerName:d.company, 
                   employerFBPageUrl:d.url,
-              }})
+              }})??null
 
 
 
@@ -107,6 +107,8 @@ async function generateDataEntries(){
   )
     entries.forEach(e=>e.updateEmployers(companies))
 
+    const body = entries.map(e=>e.csv())
+    console.log('body',body)
 
 }
 function generateCsv (){

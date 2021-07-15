@@ -14,7 +14,12 @@ Line.prototype.updateEmployers = function(companiesData){
     const data = companiesData.find( company => { 
       return company.url === employer.employerFBPageUrl
     })
-      // employerPossibleEmails:[]
-      console.log('data',data)
+    employer.emails = data?.data?.emails ?? null
+    employer.domains = data?.data?.domains ?? null
+    
   })
+}
+
+Line.prototype.csv= function(){
+  console.log('this',Object.keys(this))
 }
