@@ -81,37 +81,70 @@
 //        return csvString
 //    }
 
-async function generateDataEntries(){
+function generateCsv(members){
+  console.log('members',members)
   const entries = []
-  const {companies, members} = await new Promise((resolve,reject)=>{
-        chrome.storage.local.get(data=>{
-      resolve(data)
-    })
-  })
+  // const {members} = data
+    // await new Promise((resolve,reject)=>{
+        // chrome.storage.local.get(data=>{
+      // resolve(data)
+    // })
+  // })
 
       console.log('members',members)
-  members.forEach(({ name, url, company })=>
+  members.forEach(mem =>{
+    mem.employers = 
+      mem.company?.filter(d=>d.company != 'no <a>').map(d=>{
+              return d.company+'('+ d.url+')' }).join(',') ??''
+  })
+  members.forEach(({ name, url, employers })=>
       entries.push(new Line(
           name.split(' ')[0],
           name.split(' ')[1]??'',
           url,
-          company?.map(d=>{
-              return{
-                  employerName:d.company, 
-                  employerFBPageUrl:d.url,
-              }})??null
+        employers
 
 
 
       ))
   )
-    entries.forEach(e=>e.updateEmployers(companies))
+    // entries.forEach(e=>e.updateEmployers(companies))
+    const header = '"First Name","Last Name","Profile URL","Possible Employers"\n'
+    const body = entries.map(e=>e.csv()).join('\n')
+  const csv = header + body
 
-    const body = entries.map(e=>e.csv())
-    console.log('body',body)
-
-}
-function generateCsv (){
-   generateDataEntries()
+  return csv
 }
 
+function generateCompaniesCsv(companies){
+
+  console.log("companies", companies);
+  const entries = [];
+
+  companies.filter(c=>c.isChecked).forEach(({ name, url, members, data }) =>
+    entries.push(
+      [
+        name,
+        members.join(","),
+        data?.emails?.join(',') ?? "",
+        data?.domains?.join(',') ?? "",
+        url,
+      ]
+      // new Line(name.split(" ")[0], name.split(" ")[1] ?? "", url, employers)
+    )
+  );
+  // entries.forEach(e=>e.updateEmployers(companies))
+  const header = ['Name','Members', 'Emails', 'Domains', 'URL'].map(parse).join(',')+'\n'
+  const body = entries.map((e) => e.map(parse).join(',')).join("\n");
+  const csv = header + body;
+
+  return csv;
+}
+
+function parse(item){
+ 
+      const result = '"' + String(item).replace(/"/g, '""') + '"';
+      // console.log('result',result)
+      return result;
+  
+}

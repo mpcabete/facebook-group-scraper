@@ -115,6 +115,7 @@ const mutationHandler = function(mutationsList, observer) {
         console.log('companyPage')
 
         const data = getCompanyData()
+        console.log('company data',data)
         chrome.runtime.sendMessage({interaction:'companyData',data ,ownUrl:document.URL});
         console.log('c message sent')
         isDataSent=true
@@ -138,14 +139,16 @@ observer.observe(document.body, config);
 // document.body.addEventListener('change',execute)
 // if no data is found send it after 3s
 timeout = ()=>{
-  const data ={
+  const data =[{
                 text:'--',
                 company:'no <a>',
                url:'none'
-  }
+  }]
     if(!isDataSent){
     console.log('no Data found, moving on...')
     chrome.runtime.sendMessage({interaction:'memberData',data,ownUrl:document.URL});
+        chrome.runtime.sendMessage({interaction:'companyData',data:{emails: null, domains: null},ownUrl:document.URL});
+
   }
 }
 setTimeout(timeout,3000)

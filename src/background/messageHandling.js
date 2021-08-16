@@ -15,6 +15,7 @@
           console.log('startingCA')
           self.startCompaniesAnalysis()
 
+          response('ok')
           break;
 
 
@@ -33,11 +34,15 @@
           break;
         // ==========================================
         case "getCounts":
-          chrome.storage.local.get("members", (data) => {
+          chrome.storage.local.get(["members",'companies'], (data) => {
+            console.log('data count',data)
             if (data.members) {
-              const m = data.members.length;
-              const am = data.members.filter((m) => m.isChecked).length;
-              response({ m, am });
+              const m = data?.members?.length ?? 0;
+              const c = data?.companies?.length ?? 0;
+              const am = data?.members?.filter((m) => m.isChecked)?.length ?? 0;
+              const ac = (data?.companies?.filter((c) => c.isChecked)?.length ?? 0) + '/' + c;
+              console.log('ac',ac)
+              response({ m, am, ac });
             }
           });
           return true;
@@ -68,10 +73,21 @@
           break;
 
         // ==========================================
+        case "downloadCompanies":
+          console.log("download message");
+          chrome.storage.local.get("companies", ({ companies }) => {
+            const csv = generateCompaniesCsv(companies);
+            console.log('csv',csv)
+            response(csv);
+          });
+          return true;
+          break;
+        // ==========================================
         case "download":
           console.log("download message");
           chrome.storage.local.get("members", ({ members }) => {
             const csv = generateCsv(members);
+            console.log('csv',csv)
             response(csv);
           });
           return true;

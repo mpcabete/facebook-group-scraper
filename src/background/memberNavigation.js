@@ -52,7 +52,7 @@ self.onMemberData = (ownUrl,data, tabId) => {
         }
         // insert company data
         console.log('data',data)
-        data.forEach(c=>{
+        data?.forEach(c=>{
           if(c.company !== 'no <a>'){
             companies.push(new Company(c.company,c.url,ownUrl))
 

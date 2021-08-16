@@ -34,6 +34,13 @@ download = () => {
   });
 };
 
+downloadCompanies = () => {
+  chrome.runtime.sendMessage({ interaction: "downloadCompanies" }, (response) => {
+    console.log(response);
+    downloadFile("companies.csv", response);
+  });
+};
+
 stopAnalysis = () => {
   chrome.runtime.sendMessage({ interaction: "stop" }, function (response) {
     if (interval) {
@@ -78,6 +85,10 @@ canbtn.addEventListener("click", startCompaniesAnalysis);
 const dbtn = document.getElementById("downloadBtn");
 dbtn.addEventListener("click", download);
 
+const dcbtn = document.getElementById("downloadCompBtn");
+dcbtn.addEventListener("click", downloadCompanies);
+
+
 const sbtn = document.getElementById("stop");
 sbtn.addEventListener("click", stopAnalysis);
 
@@ -94,6 +105,7 @@ displayButtons = () => {
   gbtn.style.display = "inline-block";
   mbtn.style.display = "inline-block";
   dbtn.style.display = "inline-block";
+  dcbtn.style.display = "inline-block";
   canbtn.style.display = "inline-block";
   sbtn.style.display = "none";
 };
@@ -102,6 +114,7 @@ hideButtons = () => {
   gbtn.style.display = "none";
   mbtn.style.display = "none";
   dbtn.style.display = "none";
+  dcbtn.style.display = "none";
   canbtn.style.display = "none";
   sbtn.style.display = "inline-block";
 };
@@ -112,9 +125,12 @@ updateData = () => {
   chrome.runtime.sendMessage({ interaction: "getCounts" }, function (response) {
     console.log("response: ", response);
     const membersCont = document.getElementById("mCount");
-    membersCont.innerText = response?.m;
+    membersCont.innerText = response?.m ?? 0;
     const analysedMCont = document.getElementById("amCount");
-    analysedMCont.innerText = response.am;
+    analysedMCont.innerText = response?.am ?? 0;
+
+    const analysedCCont = document.getElementById("acCount");
+    analysedCCont.innerText = response?.ac ?? 0;
   });
 };
 updateData();

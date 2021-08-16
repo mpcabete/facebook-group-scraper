@@ -20,6 +20,28 @@ Line.prototype.updateEmployers = function(companiesData){
   })
 }
 
+
 Line.prototype.csv= function(){
-  console.log('this',Object.keys(this))
+ 
+  return parseNjoinLine(this)
+
+  function parseNjoinLine(obj,f){
+    itens = [
+      obj["firstName"],
+      obj["lastName"],
+      obj["profileURL"],
+      obj["possibleEmployers"],
+    ];
+    return itens.map(parse).join(",");
+    // const keys = Object.keys(obj)
+    // console.log('keys',keys)
+    // keys.map(i=>f(i)).join(',')
+    function parse(item) {
+      const result = '"' + String(item).replace(/"/g, '""') + '"';
+      // console.log('result',result)
+      return result;
+    }
+}
+
+  
 }
