@@ -1,7 +1,7 @@
 # facebook-group-scraper
 
 ### Instalation
-- Click code -> download ZIP
+- Click "Code" -> "download ZIP"
 - Click in the puzzle piece in the chrome toolbar and then "Manage extensions"
 - Turn on developer mode on the upper right of the page and reset chrome
 - Extract the file
