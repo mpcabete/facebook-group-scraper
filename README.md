@@ -23,6 +23,8 @@ When you have collected the data from some members you can then click "Members
 Analysis". A new tab will open and get the information from each member
 page automatically.
 
+Finally, by clicking the company analysis button you can get the emails and domains from the companies found in the member profiles.
+
 When you have enough data you can click "download data" and a CSV file with
 all the data will be downloaded, you can open the file with excel or in google
 sheets.
